@@ -1,0 +1,7 @@
+node_modules/
+.env
+MONGODB_URI=mongodb+srv://senokoaner:YOUR_DATABASE_PASSWORD@cluster0.7zprfxo.mongodb.net/devblog?retryWrites=true&w=majority
+JWT_SECRET=PASTE_YOUR_NEW_SECRET_HERE
+
+GldmnknoUYdHnrBc
+
