@@ -422,3 +422,85 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 }
+/* Navigation and dashboard additions */
+.mobile-menu-toggle {
+  display: none;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  padding: 9px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.nav-logout {
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.nav-logout:hover { color: #dc2626; }
+.dashboard-page {
+  min-height: 70vh;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 24px 84px;
+}
+.dashboard-welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 34px;
+  border: 1px solid #dbeafe;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #eff6ff, #fff 70%);
+}
+.dashboard-welcome h1 {
+  margin: 12px 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.05em;
+}
+.dashboard-welcome p { max-width: 620px; color: #64748b; line-height: 1.7; }
+.dashboard-email { color: #64748b; font-size: 0.9rem; }
+.dashboard-error { margin-top: 22px; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 28px 0 52px; }
+.stat-card { position: relative; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; }
+.stat-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: #eff6ff; color: #2563eb; font-size: 22px; }
+.stat-card p { margin: 20px 0 5px; color: #64748b; font-size: 0.9rem; }
+.stat-card strong { font-family: "Space Grotesk", sans-serif; font-size: 2rem; }
+.dashboard-section-heading, .comments-heading { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 24px; }
+.dashboard-section-heading h2, .comments-heading h2 { margin: 8px 0 0; font-size: clamp(1.6rem, 3vw, 2rem); letter-spacing: -0.04em; }
+.dashboard-post-list { overflow: hidden; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; }
+.dashboard-post-row { display: flex; align-items: center; gap: 18px; padding: 18px; border-bottom: 1px solid #e2e8f0; }
+.dashboard-post-row:last-child { border-bottom: 0; }
+.dashboard-post-thumb { flex: 0 0 90px; width: 90px; height: 76px; border-radius: 10px; object-fit: cover; background: #e2e8f0; }
+.dashboard-post-placeholder { display: grid; place-items: center; color: #2563eb; font-weight: 800; }
+.dashboard-post-info { flex: 1; min-width: 0; }
+.dashboard-post-info h3 { margin: 8px 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+.dashboard-post-info h3 a:hover { color: #2563eb; }
+.dashboard-post-info p { margin: 0; color: #64748b; font-size: 0.82rem; }
+.dashboard-post-actions { display: flex; align-items: center; gap: 8px; }
+.secondary-button { min-height: 40px; padding: 0 15px; border-color: #dbe3ef; }
+.danger-button { min-height: 40px; padding: 0 14px; border: 1px solid #fecaca; border-radius: 9px; background: #fff; color: #b91c1c; font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+.danger-button:hover { background: #fef2f2; }
+.danger-button:disabled { opacity: .6; cursor: wait; }
+@media (max-width: 760px) {
+  .mobile-menu-toggle { display: inline-flex; }
+  .navbar { position: relative; flex-wrap: wrap; }
+  .navbar .nav-links, .navbar .nav-actions { display: none; }
+  .navbar .nav-links.nav-links-open { display: flex; flex: 1 0 100%; flex-direction: column; align-items: stretch; gap: 0; padding-top: 8px; }
+  .navbar .nav-actions.nav-actions-open { display: flex; flex: 1 0 100%; flex-wrap: wrap; justify-content: flex-start; padding-bottom: 16px; }
+  .dashboard-page { padding: 32px 16px 56px; }
+  .dashboard-welcome { align-items: flex-start; flex-direction: column; padding: 24px; }
+  .stats-grid { grid-template-columns: 1fr; gap: 12px; margin: 20px 0 38px; }
+  .stat-card { padding: 18px; }
+  .stat-card p { margin-top: 12px; }
+  .dashboard-post-row { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .dashboard-post-info { flex-basis: calc(100% - 105px); }
+  .dashboard-post-actions { flex-basis: 100%; padding-left: 102px; }
+}

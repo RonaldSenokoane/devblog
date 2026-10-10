@@ -361,3 +361,44 @@
     flex-direction: column;
   }
 }
+/* Search, category, reactions and discussion */
+.posts-filters { display: flex; align-items: end; flex-wrap: wrap; gap: 14px; margin: 0 0 30px; padding: 18px; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
+.search-control { display: flex; flex: 1 1 360px; gap: 8px; min-width: 0; }
+.search-control input { flex: 1; min-width: 0; }
+.category-filter { display: grid; gap: 7px; min-width: 190px; color: #475569; font-size: .82rem; font-weight: 700; }
+.posts-filters input, .posts-filters select, .post-form-field select, .create-post-form select { min-height: 46px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 9px; background: #fff; color: #0f172a; }
+.clear-filters { min-height: 44px; padding: 0 10px; border: 0; background: transparent; color: #2563eb; font: inherit; font-weight: 700; cursor: pointer; }
+.post-card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.category-pill { display: inline-flex; align-items: center; width: fit-content; padding: 5px 9px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: .72rem; font-weight: 800; }
+.post-engagement { color: #64748b; font-size: .8rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.inline-success { padding: 12px 14px; border-radius: 10px; background: #ecfdf5; color: #166534; }
+.post-owner-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0; }
+.article-reactions { display: flex; align-items: center; gap: 18px; margin-top: 30px; padding: 18px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: .9rem; }
+.like-button { display: inline-flex; align-items: center; gap: 9px; min-height: 42px; padding: 0 15px; border: 1px solid #fecdd3; border-radius: 999px; background: #fff; color: #be123c; font: inherit; font-weight: 800; cursor: pointer; }
+.like-button span { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 999px; background: #fff1f2; }
+.like-button-active { background: #fff1f2; }
+.like-button:disabled { opacity: .6; cursor: wait; }
+.comments-section { margin-top: 42px; }
+.comments-heading { align-items: center; }
+.comments-heading > span { color: #64748b; font-size: .9rem; }
+.comment-form { padding: 18px; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
+.comment-form textarea { display: block; width: 100%; min-height: 90px; resize: vertical; padding: 12px; border: 1px solid #cbd5e1; border-radius: 9px; outline: none; }
+.comment-form textarea:focus, .posts-filters input:focus, .posts-filters select:focus, .create-post-form select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgb(37 99 235 / 10%); }
+.comment-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.comment-form-footer small { color: #64748b; }
+.comments-empty { padding: 28px 8px; color: #64748b; text-align: center; }
+.comments-list { display: grid; gap: 18px; margin-top: 24px; }
+.comment-item { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid #e2e8f0; }
+.comment-avatar { display: grid; flex: 0 0 38px; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #dbeafe; color: #1d4ed8; font-weight: 800; }
+.comment-body { flex: 1; min-width: 0; }
+.comment-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.comment-meta time { color: #64748b; font-size: .78rem; }
+.comment-body p { margin: 8px 0; color: #334155; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.comment-delete { padding: 0; border: 0; background: transparent; color: #b91c1c; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+@media (max-width: 600px) {
+  .posts-filters { align-items: stretch; padding: 14px; }
+  .search-control { flex-basis: 100%; flex-direction: column; }
+  .category-filter { min-width: 100%; }
+  .article-reactions { align-items: flex-start; flex-direction: column; }
+}

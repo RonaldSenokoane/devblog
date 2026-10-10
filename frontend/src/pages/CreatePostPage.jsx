@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api.js";
+import { Navbar, Footer } from "../components/SiteChrome.jsx";
 import "./posts.css";
 
 function CreatePostPage() {
@@ -11,6 +12,7 @@ function CreatePostPage() {
     title: "",
     subtitle: "",
     content: "",
+    category: "Web Development",
   });
 
   const [image, setImage] = useState(null);
@@ -96,6 +98,7 @@ function CreatePostPage() {
     postData.append("title", title);
     postData.append("subtitle", subtitle);
     postData.append("content", content);
+    postData.append("category", formData.category);
 
     if (image) {
       postData.append("image", image);
@@ -140,6 +143,7 @@ function CreatePostPage() {
 
   return (
     <div className="posts-page">
+      <Navbar />
       <section className="create-post-container">
         <Link className="back-link" to="/posts">
           &larr; Back to articles
@@ -192,6 +196,13 @@ function CreatePostPage() {
           </div>
 
           <div className="post-form-field">
+            <label htmlFor="postCategory">Category</label>
+            <select id="postCategory" name="category" value={formData.category} onChange={handleChange} disabled={loading}>
+              { ["Web Development", "JavaScript", "Frontend", "Backend", "Programming", "Career & Learning", "DevOps", "Other"].map((category) => <option key={category} value={category}>{category}</option>) }
+            </select>
+          </div>
+
+          <div className="post-form-field">
             <label htmlFor="postContent">Article content</label>
             <textarea
               id="postContent"
@@ -235,6 +246,7 @@ function CreatePostPage() {
           </button>
         </form>
       </section>
+      <Footer />
     </div>
   );
 }

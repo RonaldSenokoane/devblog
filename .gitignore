@@ -1,19 +1,14 @@
-# Environment variables and secrets
+# Secrets and local environment files
 .env
 .env.*
 !.env.example
 
-# Dependencies
+# Dependencies and build output
 node_modules/
-
-# Build output
 dist/
 coverage/
 
-# Logs
+# Logs and OS files
 *.log
-npm-debug.log*
-
-# Operating system files
 .DS_Store
 Thumbs.db

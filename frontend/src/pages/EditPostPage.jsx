@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api.js";
+import { Navbar, Footer } from "../components/SiteChrome.jsx";
 import "./posts.css";
 
 function EditPostPage() {
@@ -12,6 +13,7 @@ function EditPostPage() {
     title: "",
     subtitle: "",
     content: "",
+    category: "Web Development",
   });
 
   const [image, setImage] = useState(null);
@@ -58,6 +60,7 @@ function EditPostPage() {
           title: post.title || "",
           subtitle: post.subtitle || "",
           content: post.content || "",
+          category: post.category || "Web Development",
         });
 
         setCurrentImageUrl(post.imageUrl || "");
@@ -155,6 +158,7 @@ function EditPostPage() {
       postData.append("title", formData.title.trim());
       postData.append("subtitle", formData.subtitle.trim());
       postData.append("content", formData.content.trim());
+      postData.append("category", formData.category);
 
       if (image) {
         postData.append("image", image);
@@ -189,9 +193,11 @@ function EditPostPage() {
   if (loading) {
     return (
       <div className="posts-page">
+        <Navbar />
         <p className="posts-message" role="status">
           Loading post...
         </p>
+        <Footer />
       </div>
     );
   }
@@ -199,6 +205,7 @@ function EditPostPage() {
   if (errorMessage && !formData.title && !formData.content) {
     return (
       <div className="posts-page">
+        <Navbar />
         <div className="create-post-container">
           <p className="posts-error" role="alert">
             {errorMessage}
@@ -208,12 +215,14 @@ function EditPostPage() {
             Return to articles
           </Link>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
     <div className="posts-page">
+      <Navbar />
       <div className="create-post-container">
         <Link className="back-link" to={`/posts/${id}`}>
           &larr; Back to article
@@ -235,6 +244,11 @@ function EditPostPage() {
           className="create-post-form"
           onSubmit={handleSubmit}
         >
+          <label htmlFor="edit-category">Category</label>
+          <select id="edit-category" name="category" value={formData.category} onChange={handleChange} disabled={saving}>
+            {["Web Development", "JavaScript", "Frontend", "Backend", "Programming", "Career & Learning", "DevOps", "Other"].map((category) => <option key={category} value={category}>{category}</option>)}
+          </select>
+
           <label htmlFor="edit-title">Title</label>
           <input
             id="edit-title"
@@ -310,6 +324,7 @@ function EditPostPage() {
           </button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -15,47 +15,7 @@ import CreatePostPage from "./pages/CreatePostPage.jsx";
 import PostDetailsPage from "./pages/PostDetailsPage.jsx";
 import EditPostPage from "./pages/EditPostPage.jsx";
 import "./auth.css";
-
-function Navbar() {
-  return (
-    <header className="navbar">
-      <Link className="brand" to="/">
-        <span className="brand-icon">&lt;/&gt;</span>
-        DevBlog
-      </Link>
-
-      <nav className="nav-links" aria-label="Main navigation">
-        <a href="/#articles">Explore</a>
-        <a href="/#about">About</a>
-      </nav>
-
-      <div className="nav-actions">
-        <Link className="login-link" to="/login">
-          Log in
-        </Link>
-
-        <Link className="button button-small" to="/register">
-          Get started
-        </Link>
-      </div>
-    </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="footer">
-      <Link className="brand footer-brand" to="/">
-        <span className="brand-icon">&lt;/&gt;</span>
-        DevBlog
-      </Link>
-
-      <p>Write code. Share knowledge.</p>
-      <span>Built for curious developers.</span>
-    </footer>
-  );
-}
-
+import { Navbar, Footer } from "./components/SiteChrome.jsx";
 function HomePage() {
   return (
     <div className="app">
@@ -572,120 +532,92 @@ function LoginPage() {
 
 function DashboardPage() {
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({ totalPosts: 0, totalLikes: 0, totalComments: 0 });
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deletingId, setDeletingId] = useState("");
 
-  useEffect(() => {
-    let active = true;
-
-    async function loadUser() {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        navigate("/login", {
-          replace: true,
-          state: { message: "Please log in to access your dashboard." },
-        });
+  async function loadDashboard() {
+    if (!localStorage.getItem("token")) {
+      navigate("/login", { replace: true, state: { message: "Please log in to access your dashboard." } });
+      return;
+    }
+    setLoading(true);
+    setErrorMessage("");
+    try {
+      const [userResponse, statsResponse, postsResponse] = await Promise.all([
+        api.get("/auth/me"),
+        api.get("/posts/dashboard/stats"),
+        api.get("/posts/mine")
+      ]);
+      setUser(userResponse.data.user);
+      setStats(statsResponse.data.stats || { totalPosts: 0, totalLikes: 0, totalComments: 0 });
+      setPosts(postsResponse.data.posts || []);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login", { replace: true, state: { message: "Your session has expired. Please log in again." } });
         return;
       }
-
-      try {
-        const response = await api.get("/auth/me");
-
-        if (active) {
-          setUser(response.data.user);
-        }
-      } catch (error) {
-        localStorage.removeItem("token");
-
-        if (active) {
-          setErrorMessage(
-            error.response?.data?.message ||
-              "Your session could not be verified. Please log in again."
-          );
-
-          navigate("/login", {
-            replace: true,
-            state: {
-              message:
-                "Your session has expired or is invalid. Please log in again.",
-            },
-          });
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadUser();
-
-    return () => {
-      active = false;
-    };
-  }, [navigate]);
-
-  async function handleLogout() {
-    try {
-      await api.post("/auth/logout");
-    } catch (error) {
-      console.error("Logout request failed:", error.message);
+      setErrorMessage(error.response?.data?.message || "We could not load your dashboard. Please try again.");
     } finally {
-      localStorage.removeItem("token");
-      navigate("/login", {
-        replace: true,
-        state: { message: "You have been logged out." },
-      });
+      setLoading(false);
     }
   }
 
-  return (
-    <div className="app">
-      <Navbar />
+  useEffect(() => { loadDashboard(); }, []);
 
-      <main className="auth-page">
-        <section className="auth-card">
-          {loading ? (
-            <p role="status">Loading your dashboard...</p>
-          ) : user ? (
-            <>
-              <div className="auth-heading">
-                <span className="eyebrow">YOUR SPACE</span>
-                <h1>Welcome, {user.username}!</h1>
-                <p>You are successfully logged in to DevBlog.</p>
-              </div>
+  async function deletePost(postId) {
+    if (!window.confirm("Delete this article permanently?")) return;
+    setDeletingId(postId);
+    setErrorMessage("");
+    try {
+      await api.delete(`/posts/${postId}`);
+      await loadDashboard();
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Unable to delete this article.");
+    } finally {
+      setDeletingId("");
+    }
+  }
 
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
+  return <div className="app">
+    <Navbar />
+    <main className="dashboard-page">
+      <section className="dashboard-welcome">
+        <div>
+          <span className="eyebrow">YOUR SPACE</span>
+          <h1>Welcome back{user?.username ? `, ${user.username}` : ""}.</h1>
+          <p>Manage your writing, track engagement, and keep sharing what you learn.</p>
+          {user?.email && <span className="dashboard-email">{user.email}</span>}
+        </div>
+        <Link className="button" to="/posts/new">+ Write an article</Link>
+      </section>
 
-              <p>
-                Your account is ready. Next, we'll connect your dashboard
-                to real blog posts.
-              </p>
+      {errorMessage && <div className="posts-error dashboard-error" role="alert">{errorMessage}<button className="text-button" type="button" onClick={loadDashboard}>Try again</button></div>}
 
-              <button
-                className="button auth-submit"
-                type="button"
-                onClick={handleLogout}
-              >
-                Log out
-              </button>
-            </>
-          ) : (
-            <p role="alert">
-              {errorMessage || "Unable to load your account."}
-            </p>
-          )}
+      {loading ? <p className="posts-message" role="status">Loading your dashboard…</p> : <>
+        <section className="stats-grid" aria-label="Author statistics">
+          <article className="stat-card"><span className="stat-icon">✎</span><p>Published articles</p><strong>{stats.totalPosts}</strong></article>
+          <article className="stat-card"><span className="stat-icon">♡</span><p>Total likes</p><strong>{stats.totalLikes}</strong></article>
+          <article className="stat-card"><span className="stat-icon">☷</span><p>Total comments</p><strong>{stats.totalComments}</strong></article>
         </section>
-      </main>
-
-      <Footer />
-    </div>
-  );
+        <section className="dashboard-posts">
+          <div className="dashboard-section-heading"><div><span className="eyebrow">YOUR WRITING</span><h2>Your articles</h2></div><Link className="text-link" to="/posts">Explore community →</Link></div>
+          {posts.length === 0 ? <div className="posts-empty"><h3>Your first article starts here.</h3><p>Share a tutorial, a lesson learned, or a problem you solved.</p><Link className="button" to="/posts/new">Create your first post</Link></div> : <div className="dashboard-post-list">
+            {posts.map((post) => <article className="dashboard-post-row" key={post._id}>
+              {post.imageUrl ? <img src={post.imageUrl} alt="" className="dashboard-post-thumb" /> : <div className="dashboard-post-thumb dashboard-post-placeholder">&lt;/&gt;</div>}
+              <div className="dashboard-post-info"><span className="category-pill">{post.category || "Web Development"}</span><h3><Link to={`/posts/${post._id}`}>{post.title}</Link></h3><p>{new Date(post.updatedAt || post.createdAt).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" })} · {post.likes?.length || 0} likes · {post.comments?.length || 0} comments</p></div>
+              <div className="dashboard-post-actions"><Link className="secondary-button" to={`/posts/${post._id}/edit`}>Edit</Link><button className="danger-button" type="button" disabled={deletingId === post._id} onClick={() => deletePost(post._id)}>{deletingId === post._id ? "Deleting…" : "Delete"}</button></div>
+            </article>)}
+          </div>}
+        </section>
+      </>}
+    </main>
+    <Footer />
+  </div>;
 }
 
 function NotFoundPage() {
